@@ -39,7 +39,12 @@ exports.updateStockMovement = async (req, res) => {
   try {
     const stock = await StockMovement.findByPk(req.params.id);
     if (!stock) return res.status(404).json({ message: 'Stock movement not found' });
-    await stock.update(req.body);
+   // After (fixed)
+await Inventory.update(
+  { quantity: newQty },
+  { where: { id: inventoryId } } // ✅ make sure inventoryId is defined
+);
+
     res.json(stock);
   } catch (err) {
     res.status(500).json({ message: 'Failed to update stock movement', error: err.message });
